@@ -1,14 +1,12 @@
 package expression;
 
-import java.util.Map;
 import java.util.regex.Pattern;
 
-import expression_Factory.Factory;
 
 import model.RGBColor;
 import model.util.ColorCombinations;
 
-public class Exp extends Factory implements Expression {
+public class Exp extends ParenExpression implements Expression {
 	private Expression myOperand1;
 	private Expression myOperand2;
 	private int numofop = 2;
@@ -16,6 +14,7 @@ public class Exp extends Factory implements Expression {
 			.compile("(\\((exp))|(\\((\\^))");
 
 	public Exp() {
+		super(0);
 	}
 
 	public Exp(Expression[] operands, int currentPosition) {
@@ -30,26 +29,20 @@ public class Exp extends Factory implements Expression {
 
 	public RGBColor evaluate(double x, double y, double t) {
 
-		return ColorCombinations.exp(myOperand1.evaluate(x, y, t),
+		return ColorCombinations.add(myOperand1.evaluate(x, y, t),
 				myOperand2.evaluate(x, y, t));
 	}
 
-	@Override
-	public boolean isThisKindOfExpression(String input, int currentPosition) {
-
-		return super.isThisKindOfExpression(input, currentPosition,
-				EXPRESSION_BEGIN_REGEX);
+	public int numofop() {
+		return numofop;
 	}
-
-	@Override
-	public Expression parseExpression(String myinput, int currentPosition, Map<String, Expression> map) {
-		Expression result = super.parseExpression(myinput, currentPosition,
-				EXPRESSION_BEGIN_REGEX, numofop, map, new Exp());
-		return result;
-	}
-
+	
 	public Exp getFactory() {
 		return this;
+	}
+	public Pattern getPattern()
+	{
+		return EXPRESSION_BEGIN_REGEX;
 	}
 
 }

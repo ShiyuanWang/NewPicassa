@@ -1,5 +1,7 @@
 package model.util;
 
+import model.ParserException;
+
 public class LittleTools {
 private String myInput;
      public LittleTools(String input)
@@ -13,7 +15,12 @@ private String myInput;
 	 
 	  public char currentCharacter (int myCurrentPosition)
 	    {
-	        return myInput.charAt(myCurrentPosition);
+		  if(myCurrentPosition >= myInput.length())
+			{
+				throw new ParserException("Unknown Type of Expression is used to evaluate "
+						+ myInput);
+			}  
+		  return myInput.charAt(myCurrentPosition);
 	    }
 	  public String toString()
 	  {

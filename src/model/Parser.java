@@ -63,7 +63,11 @@ public class Parser {
 	private Map<String, Expression> expressionMap = new HashMap<String, Expression>();
 
 	public Parser() {
-	    expressionKind.add(new Value().getFactory());
+		expressionKind.add(new Plus().getFactory());
+		expressionKind.add(new ConstantColor().getFactory());
+		expressionKind.add(new Xfunc().getFactory());
+		expressionKind.add(new Abs().getFactory());
+		expressionKind.add(new Value().getFactory());
 	    expressionKind.add(new Constant().getFactory());
 	    expressionKind.add(new Let().getFactory());
 		expressionKind.add(new PerlinBW().getFactory());
@@ -76,20 +80,16 @@ public class Parser {
 		expressionKind.add(new Tan().getFactory());
 		expressionKind.add(new Log().getFactory());
 		expressionKind.add(new RGBtoYCrCb().getFactory());
-		expressionKind.add(new YCrCbtoRGB().getFactory());
-		expressionKind.add(new Abs().getFactory());
+		expressionKind.add(new YCrCbtoRGB().getFactory());		
 		expressionKind.add(new Clamp().getFactory());
 		expressionKind.add(new Floor().getFactory());
 		expressionKind.add(new Constant().getFactory());
-		expressionKind.add(new ConstantColor().getFactory());
 		expressionKind.add(new Divide().getFactory());
 		expressionKind.add(new Exp().getFactory());
 		expressionKind.add(new Mod().getFactory());
 		expressionKind.add(new Multiply().getFactory());
 		expressionKind.add(new Neg().getFactory());
-		expressionKind.add(new Plus().getFactory());
 		expressionKind.add(new Subtract().getFactory());
-		expressionKind.add(new Xfunc().getFactory());
 		expressionKind.add(new Yfunc().getFactory());
 		expressionKind.add(new Sum().getFactory());
 		expressionKind.add(new Product().getFactory());
@@ -98,6 +98,7 @@ public class Parser {
 		expressionKind.add(new Min().getFactory());
 		expressionKind.add(new If().getFactory());
 		expressionKind.add(new Tcase().getFactory());
+		expressionKind.add(new Constant().getFactory());
 	}
 
 	/**
@@ -109,7 +110,6 @@ public class Parser {
 	 */
 	public Expression makeExpression(String input, int currentPosition) {
 		LittleTools tool = new LittleTools(input);
-	//	Map<String,Expression> map = new HashMap<String, Expression>();
 		Expression result = switchExpression(input, currentPosition, expressionMap);
 		currentPosition = result.getPosition();
 		currentPosition = tool.skipWhiteSpace(currentPosition);
@@ -125,7 +125,7 @@ public class Parser {
 	public Expression switchExpression(String input, int currentPosition, Map<String, Expression> map) {
 		
 		for (Factory Express : expressionKind) {
-			if (Express.isThisKindOfExpression(input, currentPosition)) {
+			if (Express.isThisKindOfExpression(input, currentPosition, Express.getPattern())) {
 				Expression result = Express.parseExpression(input,
 						currentPosition, map);
 				return result;

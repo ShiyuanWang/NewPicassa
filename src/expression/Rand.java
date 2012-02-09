@@ -9,7 +9,6 @@ import expression_Factory.Factory;
 
 public class Rand extends Factory implements Expression{
 	private RGBColor myValue;
-	private int numofop = 0;
 	private final Pattern EXPRESSION_BEGIN_REGEX = Pattern
 			.compile("(random)");
 	
@@ -18,7 +17,8 @@ public class Rand extends Factory implements Expression{
 		myValue = value;
 	}
 	
-	public Rand() {	
+	public Rand() {
+		super(0);
 	}
 
 	public RGBColor evaluate(double x, double y, double t) {
@@ -27,27 +27,34 @@ public class Rand extends Factory implements Expression{
 		return myValue;
 	}
 
-	@Override
-	public boolean isThisKindOfExpression(String myinput, int currentPosition) {
-		
-		return super.isThisKindOfExpression(myinput, currentPosition,
-				EXPRESSION_BEGIN_REGEX);
+	public Rand getFactory() {
+		return this;
 	}
-
-	 public Expression parseExpression(String myinput, int currentPosition, Map<String,Expression> map) {
-	
-		 Expression result =  super.parseExpression(myinput, currentPosition,EXPRESSION_BEGIN_REGEX, numofop, map, new Rand());
-		 return result;
-			
-		}
-
-		public Rand getFactory() {
-			return this;
-
-		}
 
 	@Override
 	public Expression setop(Expression[] operands, int myCurrentPosition) {
+		return this;
+	}
+
+	@Override
+	public void setPosition(int currentPosition) {
+		super.setPosition(currentPosition);
+	}
+    
+	public Pattern getPattern()
+	{
+		return EXPRESSION_BEGIN_REGEX;
+	}
+    
+	@Override
+	public int numofop() {
+		
+		return 0;
+	}
+
+	@Override
+	public Expression genExpression(String numberMatch, Expression[] operands,
+			int myCurrentPosition, String input, Map<String,Expression> map) {
 		return this;
 	}
 }

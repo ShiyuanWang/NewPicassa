@@ -1,15 +1,13 @@
 package expression;
 
-import java.util.Map;
 import java.util.regex.Pattern;
 
-import expression_Factory.Factory;
 
 import model.RGBColor;
 
 import model.util.ColorCombinations;
 
-public class PerlinBW extends Factory implements Expression {
+public class PerlinBW extends ParenExpression implements Expression {
 	private Expression myOperand1;
 	private Expression myOperand2;
 	private int numofop = 2;
@@ -17,6 +15,7 @@ public class PerlinBW extends Factory implements Expression {
 			.compile("\\((perlinBW)");
 
 	public PerlinBW() {
+		super(0);
 	}
 
 	public PerlinBW(Expression[] operands, int currentPosition) {
@@ -31,28 +30,19 @@ public class PerlinBW extends Factory implements Expression {
 
 	public RGBColor evaluate(double x, double y, double t) {
 
-		return ColorCombinations.perlinBW(myOperand1.evaluate(x, y, t),
+		return ColorCombinations.add(myOperand1.evaluate(x, y, t),
 				myOperand2.evaluate(x, y, t));
 	}
 
-	@Override
-	public boolean isThisKindOfExpression(String input, int currentPosition) {
-
-		return super.isThisKindOfExpression(input, currentPosition,
-				EXPRESSION_BEGIN_REGEX);
+	public int numofop() {
+		return numofop;
 	}
-
-	@Override
-	public Expression parseExpression(String myinput, int currentPosition, Map<String,Expression> map) {
-		Expression result = super.parseExpression(myinput, currentPosition,
-				EXPRESSION_BEGIN_REGEX, numofop,map, new PerlinBW());
-		return result;
-
-	}
-
+	
 	public PerlinBW getFactory() {
 		return this;
 	}
-
+	public Pattern getPattern()
+	{
+		return EXPRESSION_BEGIN_REGEX;
+	}
 }
-/* Why I can not create a new Parser here */

@@ -10,37 +10,51 @@ import model.util.ColorCombinations;
 
 public class Xfunc extends Factory implements Expression {
 	private final Pattern X = Pattern.compile("(x)");
-	private int numofop = 0;
+    private int type = 0;
+	
 
-	public Xfunc() {
-	}
-
-	public Xfunc(int currentPosition) {
+	public Xfunc(RGBColor value, int currentPosition) {
 		super(currentPosition);
 	}
-
-	public Expression setop(Expression[] operands, int currentPosition) {
-		return new Xfunc(currentPosition);
+	
+	public Xfunc() {
+		super(0);
 	}
 
-	public RGBColor evaluate(double x, double y,double t) {
+	public RGBColor evaluate(double x, double y, double t) {
 		return ColorCombinations.XYfunc(x);
 	}
 
-	@Override
-	public boolean isThisKindOfExpression(String input, int currentPosition) {
-		return super.isThisKindOfExpression(input, currentPosition, X);
-	}
-
-	@Override
-	public Expression parseExpression(String myinput, int currentPosition,Map<String,Expression> map) {
-		Expression result = super.parseExpression(myinput, currentPosition, X,
-				numofop, map, new Xfunc());
-		return result;
-
-	}
-
 	public Xfunc getFactory() {
+		return this;
+	}
+
+	@Override
+	public Expression setop(Expression[] operands, int myCurrentPosition) {
+		return this;
+	}
+
+    
+	public Pattern getPattern()
+	{
+		return X;
+	}
+    
+
+    public int getType()
+    {
+    	return type;
+    }
+
+	@Override
+	public int numofop() {
+		
+		return 0;
+	}
+
+	@Override
+	public Expression genExpression(String numberMatch, Expression[] operands,
+			int myCurrentPosition, String input, Map<String,Expression> map) {
 		return this;
 	}
 }

@@ -1,8 +1,5 @@
 package model.util;
 
-import java.awt.List;
-
-import expression.Constant;
 import expression.Expression;
 
 import model.RGBColor;

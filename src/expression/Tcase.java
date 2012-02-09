@@ -6,41 +6,50 @@ import java.util.regex.Pattern;
 import expression_Factory.Factory;
 
 import model.RGBColor;
-import model.util.ColorCombinations;
 
 public class Tcase extends Factory implements Expression {
-	private final Pattern X = Pattern.compile("(t)");
+	private final Pattern T = Pattern.compile("(t)");
 	private int numofop = 0;
-
-	public Tcase() {
-	}
-
-	public Tcase(int currentPosition) {
+    public Tcase(RGBColor value, int currentPosition) {
 		super(currentPosition);
 	}
-
-	public Expression setop(Expression[] operands, int currentPosition) {
-		return new Tcase(currentPosition);
+	
+	public Tcase() {
+		super(0);
 	}
 
-	public RGBColor evaluate(double x, double y,double t) {
-		return new RGBColor(t);
-	}
-
-	@Override
-	public boolean isThisKindOfExpression(String input, int currentPosition) {
-		return super.isThisKindOfExpression(input, currentPosition, X);
-	}
-
-	@Override
-	public Expression parseExpression(String myinput, int currentPosition,Map<String,Expression> map) {
-		Expression result = super.parseExpression(myinput, currentPosition, X,
-				numofop, map, new Tcase());
-		return result;
-
+	public RGBColor evaluate(double x, double y, double t) {
+		return new RGBColor(t, t, t);
 	}
 
 	public Tcase getFactory() {
+		return this;
+	}
+
+	@Override
+	public Expression setop(Expression[] operands, int myCurrentPosition) {
+		return this;
+	}
+
+	@Override
+	public void setPosition(int currentPosition) {
+		super.setPosition(currentPosition);
+	}
+    
+	public Pattern getPattern()
+	{
+		return T;
+	}
+    
+	@Override
+	public int numofop() {
+		
+		return numofop;
+	}
+
+	@Override
+	public Expression genExpression(String numberMatch, Expression[] operands,
+			int myCurrentPosition, String input, Map<String,Expression> map) {
 		return this;
 	}
 }

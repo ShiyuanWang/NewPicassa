@@ -1,21 +1,19 @@
 package expression;
 
-import java.util.Map;
 import java.util.regex.Pattern;
-
-import expression_Factory.Factory;
 
 import model.RGBColor;
 
 import model.util.ColorCombinations;
 
-public class Plus extends Factory implements Expression {
+public class Plus extends ParenExpression implements Expression {
 	private Expression myOperand1;
 	private Expression myOperand2;
 	private int numofop = 2;
 	private static final Pattern EXPRESSION_BEGIN_REGEX = Pattern
 			.compile("(\\((plus))|(\\((\\+))");
 	public Plus() {
+		super(0);
 	}
 
 	public Plus(Expression[] operands, int currentPosition) {
@@ -34,25 +32,35 @@ public class Plus extends Factory implements Expression {
 				myOperand2.evaluate(x, y, t));
 	}
 
-	@Override
-	public boolean isThisKindOfExpression(String input, int currentPosition) {
-
-		return super.isThisKindOfExpression(input, currentPosition,
-				EXPRESSION_BEGIN_REGEX);
+	public int numofop() {
+		return numofop;
 	}
-
-	@Override
-	public Expression parseExpression(String myinput, int currentPosition, Map<String,Expression> map) {
-        
-		Expression result = super.parseExpression(myinput, currentPosition,
-				EXPRESSION_BEGIN_REGEX, numofop, map,new Plus());
-		return result;
-
-	}
-
+	
 	public Plus getFactory() {
 		return this;
 	}
+	public Pattern getPattern()
+	{
+		return EXPRESSION_BEGIN_REGEX;
+	}
 
+
+/*	@Override
+	public Expression genExpression(String numberMatch, Expression[] operands,
+			int myCurrentPosition, String input) {
+		LittleTools tool = new LittleTools(input);
+		myCurrentPosition = tool.skipWhiteSpace(myCurrentPosition);
+		if (myCurrentPosition == input.length()) {
+			throw new ParserException("The parens are not balanced!");
+		}
+		if (tool.currentCharacter(myCurrentPosition) == ')') {
+			myCurrentPosition++;
+			return setop(operands, myCurrentPosition);
+
+		} else {
+			throw new ParserException("Expected close paren, instead found "
+					+ input.substring(myCurrentPosition));
+	   }
+	}*/
 }
 

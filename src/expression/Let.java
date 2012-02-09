@@ -1,5 +1,6 @@
 package expression;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,6 +16,7 @@ import model.util.LittleTools;
 public class Let extends Factory implements Expression {
 	private Expression value;
 	private String key;
+	private Map<String, Expression> expressionMap = new HashMap<String, Expression>();
 	private int myCurrentPosition;
 	private int numofop = 2;
 	private static final Pattern EXPRESSION_BEGIN_REGEX = Pattern
@@ -27,6 +29,7 @@ public class Let extends Factory implements Expression {
 
 	public Let(Expression[] operands, int currentPosition) {
 		super(currentPosition);
+	    expressionMap.put(key,operands[0]);
 		value = operands[1];
 	}
 
@@ -39,13 +42,6 @@ public class Let extends Factory implements Expression {
 		return value.evaluate(x,y,t);
 	}
 
-	@Override
-	public boolean isThisKindOfExpression(String input, int currentPosition) {
-         
-		return super.isThisKindOfExpression(input, currentPosition,
-				EXPRESSION_BEGIN_REGEX);
-	}
-	@Override
 	public Expression parseExpression(String input, int currentPosition, Map<String, Expression> map) {
 		 LittleTools tool = new LittleTools(input);
 	     myCurrentPosition = currentPosition; 
@@ -54,7 +50,7 @@ public class Let extends Factory implements Expression {
          myCurrentPosition = expMatcher.end();
          myCurrentPosition = tool.skipWhiteSpace(myCurrentPosition);
          key = genKey(input,myCurrentPosition);
-         Expression[] operands = this.genOperands(input, numofop, map);
+         Expression[] operands = genOperands(input, numofop, map);
          myCurrentPosition = tool.skipWhiteSpace(myCurrentPosition);
          if(myCurrentPosition == input.length())
          {
@@ -74,16 +70,15 @@ public class Let extends Factory implements Expression {
 	}
 	
 	
-	private Expression[] genOperands(String input, int num, Map<String, Expression>map)
+	protected Expression[] genOperands(String input, int num, Map<String, Expression>map)
     {    
     	  Expression[] ops = new Expression[num];
     	  for(int i = 0; i< num; i++)
     	  {    
     		  ops[i] = new Parser().switchExpression(input, myCurrentPosition, map);
-    		  if(i == 0) map.put(key,ops[0]);
+    		  if(i == 0)map.put(key,ops[0]);
     		  myCurrentPosition = ops[i].getPosition();
     		  myCurrentPosition = new LittleTools(input).skipWhiteSpace(myCurrentPosition);
-
     	  }
     	return ops;
     }
@@ -103,5 +98,23 @@ public class Let extends Factory implements Expression {
 		return this;
 	}
 
+	@Override
+	public Pattern getPattern() {
+		
+		return EXPRESSION_BEGIN_REGEX;
+	}
+
+	@Override
+	public int numofop() {
+		
+		return numofop;
+	}
+
+	@Override
+	public Expression genExpression(String numberMatch, Expression[] operands,
+			int myCurrentPosition, String input, Map<String, Expression> map) {
+		
+		return null;
+	}
 }
 

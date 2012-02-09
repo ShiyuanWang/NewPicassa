@@ -1,15 +1,13 @@
 package expression;
 
-import java.util.Map;
 import java.util.regex.Pattern;
 
-import expression_Factory.Factory;
 
 
 import model.RGBColor;
 import model.util.ColorCombinations;
 
-public class Mod extends Factory implements Expression {
+public class Mod extends ParenExpression implements Expression {
 	private Expression myOperand1;
 	private Expression myOperand2;
 	private int numofop = 2;
@@ -18,7 +16,7 @@ public class Mod extends Factory implements Expression {
 	EXPRESSION_BEGIN_REGEX = Pattern.compile("(\\((mod))|(\\((\\%))");
 
 	public Mod() {
-		// TODO Auto-generated constructor stub
+		super(0);
 	}
 
 	public Mod(Expression[] operands, int currentPosition) {
@@ -33,28 +31,20 @@ public class Mod extends Factory implements Expression {
 
 	public RGBColor evaluate(double x, double y, double t) {
 
-		return ColorCombinations.mod(myOperand1.evaluate(x, y, t),
+		return ColorCombinations.add(myOperand1.evaluate(x, y, t),
 				myOperand2.evaluate(x, y, t));
 	}
 
-	@Override
-	public boolean isThisKindOfExpression(String input, int currentPosition) {
-
-		return super.isThisKindOfExpression(input, currentPosition,
-				EXPRESSION_BEGIN_REGEX);
+	public int numofop() {
+		return numofop;
 	}
-
-	@Override
-	public Expression parseExpression(String myinput, int currentPosition, Map<String,Expression> map) {
-		Expression result = super.parseExpression(myinput,currentPosition,
-				EXPRESSION_BEGIN_REGEX, numofop, map,new Mod());
-		return result;
-
-	}
-
-	@Override
+	
 	public Mod getFactory() {
 		return this;
+	}
+	public Pattern getPattern()
+	{
+		return EXPRESSION_BEGIN_REGEX;
 	}
 
 }
